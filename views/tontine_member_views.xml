@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ============================= -->
+    <!-- VUE LISTE DES MEMBRES -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_member_list" model="ir.ui.view">
+        <field name="name">tontine.member.list</field>
+        <field name="model">tontine.member</field>
+        <field name="arch" type="xml">
+            <list string="Membres">
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="join_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================= -->
+    <!-- VUE FORMULAIRE DES MEMBRES -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_member_form" model="ir.ui.view">
+        <field name="name">tontine.member.form</field>
+        <field name="model">tontine.member</field>
+        <field name="arch" type="xml">
+            <form string="Membre">
+                <sheet>
+                    <field name="photo" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="partner_id"
+                                domain="[('is_company','=',False)]"
+                                context="{'default_is_company': False, 'default_company_type': 'person'}"
+                                placeholder="Nom du membre"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations personnelles">
+                            <field name="phone"/>
+                            <field name="join_date"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_tontine_member_kanban" model="ir.ui.view">
+        <field name="name">tontine.member.kanban</field>
+        <field name="model">tontine.member</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="join_date"/>
+                <field name="state"/>
+                <field name="photo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <img t-att-src="kanban_image('tontine.member', 'photo', record.id.raw_value)"
+                                    class="o_kanban_image_fill_left rounded-circle"
+                                    style="width:40px;height:40px;object-fit:cover;"
+                                    alt="Photo"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div t-if="record.phone.value">
+                                    <i class="fa fa-phone"/> <field name="phone"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-calendar"/> <field name="join_date"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="state" widget="label_selection"
+                                        options="{'classes': {'active': 'success', 'suspended': 'danger'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_tontine_member_top_list" model="ir.ui.view">
+        <field name="name">tontine.member.top.list</field>
+        <field name="model">tontine.member</field>
+        <field name="arch" type="xml">
+            <list string="Membres" default_order="subscription_count desc">
+                <field name="name"/>
+                <field name="subscription_count"/>
+                <field name="penalty_count"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <!-- ============================= -->
+    <!-- ACTION FENETRE MEMBRES -->
+    <!-- ============================= -->
+
+    <record id="action_tontine_member" model="ir.actions.act_window">
+        <field name="name">Membres</field>
+        <field name="res_model">tontine.member</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+    <record id="action_top10_members" model="ir.actions.act_window">
+        <field name="name">Top 10 membres les plus actifs</field>
+        <field name="res_model">tontine.member</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('subscription_count', '>', 0)]</field>
+        <field name="limit">10</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'list', 'view_id': ref('view_tontine_member_top_list')})]"/>
+    </record>
+</odoo>

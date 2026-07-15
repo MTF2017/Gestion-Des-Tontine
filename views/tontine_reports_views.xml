@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ============================= -->
+<!-- VUES GRAPH -->
+<!-- ============================= -->
+
+<record id="view_tontine_member_graph" model="ir.ui.view">
+    <field name="name">tontine.member.graph</field>
+    <field name="model">tontine.member</field>
+    <field name="arch" type="xml">
+        <graph string="Membres" type="bar">
+            <field name="name"/>
+            <field name="subscription_count" type="measure"/>
+            <field name="penalty_count" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="view_tontine_group_graph" model="ir.ui.view">
+    <field name="name">tontine.group.graph</field>
+    <field name="model">tontine.group</field>
+    <field name="arch" type="xml">
+        <graph string="Tontines" type="bar">
+            <field name="name"/>
+            <field name="group_penalty_count" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="view_tontine_member_pivot" model="ir.ui.view">
+    <field name="name">tontine.member.pivot</field>
+    <field name="model">tontine.member</field>
+    <field name="arch" type="xml">
+        <pivot string="Analyse membres">
+            <field name="state" type="row"/>
+            <field name="penalty_count" type="measure"/>
+            <field name="subscription_count" type="measure"/>
+        </pivot>
+    </field>
+</record>
+
+<!-- ============================= -->
+<!-- 1. Membres sans jamais de pénalité -->
+<!-- ============================= -->
+<record id="action_members_no_penalty" model="ir.actions.act_window">
+    <field name="name">Membres sans pénalité</field>
+    <field name="res_model">tontine.member</field>
+    <field name="view_mode">list,form,graph</field>
+    <field name="domain">[('penalty_count', '=', 0)]</field>
+</record>
+
+<!-- ============================= -->
+<!-- 2. Top 10 membres les plus inscrits -->
+<!-- ============================= -->
+<record id="action_top10_members" model="ir.actions.act_window">
+    <field name="name">Top 10 membres les plus actifs</field>
+    <field name="res_model">tontine.member</field>
+    <field name="view_mode">list,graph,form</field>
+    <field name="domain">[('subscription_count', '>', 0)]</field>
+    <field name="context">{'search_default_sort_desc': 1, 'graph_measure': 'subscription_count'}</field>
+    <field name="limit">10</field>
+</record>
+
+<record id="action_top10_members_view1" model="ir.actions.act_window.view">
+    <field name="sequence">1</field>
+    <field name="view_mode">graph</field>
+    <field name="view_id" ref="view_tontine_member_graph"/>
+    <field name="act_window_id" ref="action_top10_members"/>
+</record>
+
+<!-- ============================= -->
+<!-- 3. Tontines sans jamais de pénalité -->
+<!-- ============================= -->
+<record id="action_groups_no_penalty" model="ir.actions.act_window">
+    <field name="name">Tontines sans pénalité</field>
+    <field name="res_model">tontine.group</field>
+    <field name="view_mode">list,form,graph</field>
+    <field name="domain">[('group_penalty_count', '=', 0)]</field>
+</record>
+
+<!-- ============================= -->
+<!-- 4. Membres n'ayant jamais adhéré -->
+<!-- ============================= -->
+<record id="action_members_no_subscription" model="ir.actions.act_window">
+    <field name="name">Membres sans adhésion</field>
+    <field name="res_model">tontine.member</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('subscription_count', '=', 0)]</field>
+</record>
+
+<!-- ============================= -->
+<!-- 5. Analyse globale (pivot) pour les décideurs -->
+<!-- ============================= -->
+<record id="action_members_analysis" model="ir.actions.act_window">
+    <field name="name">Analyse des membres</field>
+    <field name="res_model">tontine.member</field>
+    <field name="view_mode">list,pivot,graph</field>
+</record>
+
+<record id="action_members_analysis_view1" model="ir.actions.act_window.view">
+    <field name="sequence">1</field>
+    <field name="view_mode">pivot</field>
+    <field name="view_id" ref="view_tontine_member_pivot"/>
+    <field name="act_window_id" ref="action_members_analysis"/>
+</record>
+
+<!-- ============================= -->
+<!-- Sous-menus regroupés sous "Rapports" -->
+<!-- ============================= -->
+<menuitem id="menu_tontine_reports" name="Rapports" parent="menu_tontine_root" sequence="90"/>
+
+<menuitem id="menu_members_no_penalty" name="Membres sans pénalité"
+          parent="menu_tontine_reports" action="action_members_no_penalty" sequence="10"/>
+<menuitem id="menu_top10_members" name="Top 10 membres actifs"
+          parent="menu_tontine_reports" action="action_top10_members" sequence="20"/>
+<menuitem id="menu_groups_no_penalty" name="Tontines sans pénalité"
+          parent="menu_tontine_reports" action="action_groups_no_penalty" sequence="30"/>
+<menuitem id="menu_members_no_subscription" name="Membres sans adhésion"
+          parent="menu_tontine_reports" action="action_members_no_subscription" sequence="40"/>
+<menuitem id="menu_members_analysis" name="Analyse des membres"
+          parent="menu_tontine_reports" action="action_members_analysis" sequence="50"/>
+
+</odoo>

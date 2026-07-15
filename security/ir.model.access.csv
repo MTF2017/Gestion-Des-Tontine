@@ -1,0 +1,27 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_tontine_group_manager,tontine.group manager,model_tontine_group,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_member_manager,tontine.member manager,model_tontine_member,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_subscription_manager,tontine.subscription manager,model_tontine_subscription,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_payment_manager,tontine.payment manager,model_tontine_payment,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_distribution_manager,tontine.distribution manager,model_tontine_distribution,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_penalty_manager,tontine.penalty manager,model_tontine_penalty,gestion_tontine.group_tontine_manager,1,1,1,1
+
+access_tontine_cash_manager,tontine.cash manager,model_tontine_cash,gestion_tontine.group_tontine_manager,1,1,1,1
+
+
+access_tontine_group_cashier,tontine.group cashier,model_tontine_group,gestion_tontine.group_tontine_cashier,1,0,0,0
+
+access_tontine_payment_cashier,tontine.payment cashier,model_tontine_payment,gestion_tontine.group_tontine_cashier,1,1,1,0
+
+access_tontine_cash_cashier,tontine.cash cashier,model_tontine_cash,gestion_tontine.group_tontine_cashier,1,1,1,0
+
+
+access_tontine_member_user,tontine.member user,model_tontine_member,gestion_tontine.group_tontine_member,1,0,0,0
+
+access_tontine_payment_user,tontine.payment user,model_tontine_payment,gestion_tontine.group_tontine_member,1,0,0,0

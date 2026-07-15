@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ============================= -->
+    <!-- MENU RACINE -->
+    <!-- ============================= -->
+
+    <menuitem id="menu_tontine_root" name="Gestion Tontine" sequence="10"/>
+
+    <!-- ============================= -->
+    <!-- MENU OPÉRATIONS -->
+    <!-- ============================= -->
+
+    <menuitem id="menu_tontine_operations" name="Opérations" parent="menu_tontine_root" sequence="10"/>
+
+    <menuitem id="menu_tontine_group" name="Tontines" parent="menu_tontine_operations" action="action_tontine_group" sequence="10"/>
+
+    <menuitem id="menu_tontine_member" name="Membres" parent="menu_tontine_operations" action="action_tontine_member" sequence="20"/>
+
+    <menuitem id="menu_tontine_subscription" name="Adhésions" parent="menu_tontine_operations" action="action_tontine_subscription" sequence="30"/>
+
+    <menuitem id="menu_tontine_payment" name="Cotisations" parent="menu_tontine_operations" action="action_tontine_payment" sequence="40"/>
+
+    <menuitem id="menu_tontine_distribution" name="Distributions" parent="menu_tontine_operations" action="action_tontine_distribution" sequence="50"/>
+
+    <menuitem id="menu_tontine_penalty" name="Pénalités" parent="menu_tontine_operations" action="action_tontine_penalty" sequence="60"/>
+
+    <menuitem id="menu_tontine_cash" name="Caisse" parent="menu_tontine_operations" action="action_tontine_cash" sequence="70"/>
+
+    <!-- ============================= -->
+    <!-- MENU RAPPORTS -->
+    <!-- ============================= -->
+
+    <menuitem id="menu_tontine_reports" name="Rapports" parent="menu_tontine_root" sequence="80"/>
+
+    <!-- À créer lorsque les rapports seront développés -->
+    <!--
+    <menuitem id="menu_tontine_report_members"
+              name="Liste des membres"
+              parent="menu_tontine_reports"
+              action="action_tontine_report_members"
+              sequence="10"/>
+
+    <menuitem id="menu_tontine_report_payments"
+              name="Historique des cotisations"
+              parent="menu_tontine_reports"
+              action="action_tontine_report_payments"
+              sequence="20"/>
+
+    <menuitem id="menu_tontine_report_finance"
+              name="Situation financière"
+              parent="menu_tontine_reports"
+              action="action_tontine_report_finance"
+              sequence="30"/>
+    -->
+
+    <!-- ============================= -->
+    <!-- MENU CONFIGURATION -->
+    <!-- ============================= -->
+
+    <menuitem id="menu_tontine_configuration" name="Configuration" parent="menu_tontine_root" sequence="90"/>
+
+    <!-- Menus futurs -->
+    <!--
+    <menuitem id="menu_tontine_frequency"
+              name="Fréquences"
+              parent="menu_tontine_configuration"
+              action="action_tontine_frequency"
+              sequence="10"/>
+
+    <menuitem id="menu_tontine_penalty_rule"
+              name="Règles de pénalités"
+              parent="menu_tontine_configuration"
+              action="action_tontine_penalty_rule"
+              sequence="20"/>
+
+    <menuitem id="menu_tontine_payment_method"
+              name="Modes de paiement"
+              parent="menu_tontine_configuration"
+              action="action_tontine_payment_method"
+              sequence="30"/>
+    -->
+    <record id="action_tontine_dashboard" model="ir.actions.client">
+        <field name="name">Tableau de bord Tontine</field>
+        <field name="tag">tontine_dashboard</field>
+    </record>
+
+    <menuitem id="menu_tontine_dashboard"
+            name="Tableau de bord"
+            parent="menu_tontine_root"
+            action="action_tontine_dashboard"
+            sequence="1"/>
+</odoo>

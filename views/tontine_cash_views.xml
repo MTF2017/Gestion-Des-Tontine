@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <odoo>
+    <!-- ============================= -->
+    <!-- CAISSE -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_cash_list" model="ir.ui.view">
+        <field name="name">tontine.cash.list</field>
+        <field name="model">tontine.cash</field>
+        <field name="arch" type="xml">
+            <list string="Mouvements de caisse">
+                <field name="date"/>
+                <field name="group_id"/>
+                <field name="member_id"/>
+                <field name="move_type" widget="badge" decoration-success="move_type == 'in'" decoration-danger="move_type == 'out'"/>
+                <field name="source"/>
+                <field name="description"/>
+                <field name="amount" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tontine_cash_form" model="ir.ui.view">
+        <field name="name">tontine.cash.form</field>
+        <field name="model">tontine.cash</field>
+        <field name="arch" type="xml">
+            <form string="Mouvement de caisse">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="group_id" domain="[('state', '=', 'active')]"/>
+                            <field name="available_member_ids" invisible="1"/>
+                            <field name="member_id" domain="[('id', 'in', available_member_ids)]" readonly="not group_id"/>
+                            <field name="date"/>
+                            <field name="source"/>
+                            <field name="move_type"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="description"/>
+                            <field name="payment_id" invisible="source != 'contribution'"/>
+                            <field name="penalty_id" invisible="source != 'penalty'"/>
+                            <field name="distribution_id" invisible="source != 'distribution'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tontine_cash_search" model="ir.ui.view">
+        <field name="name">tontine.cash.search</field>
+        <field name="model">tontine.cash</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher mouvement">
+                <field name="group_id"/>
+                <field name="member_id"/>
+                <field name="description"/>
+                <filter string="Entrées" name="in" domain="[('move_type','=','in')]"/>
+                <filter string="Sorties" name="out" domain="[('move_type','=','out')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Tontine" name="group_by_group" context="{'group_by':'group_id'}"/>
+                    <filter string="Membre" name="group_by_member" context="{'group_by':'member_id'}"/>
+                    <filter string="Type" name="group_by_type" context="{'group_by':'move_type'}"/>
+                    <filter string="Origine" name="group_by_source" context="{'group_by':'source'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tontine_cash" model="ir.actions.act_window">
+        <field name="name">Caisse</field>
+        <field name="res_model">tontine.cash</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

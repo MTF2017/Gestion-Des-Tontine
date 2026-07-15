@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="gestion_tontine.TontineDashboard">
+    <div class="o_tontine_dashboard" style="height: 100%; overflow-y: auto; padding: 24px;">
+      <div t-if="state.loading" class="text-center p-5">
+        <i class="fa fa-spinner fa-spin fa-2x"/>
+      </div>
+
+      <t t-if="!state.loading and state.view === 'global'">
+        <h2 class="mb-4">Tableau de bord - Gestion Tontine</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm">
+                <div class="fs-4 fw-bold" t-esc="state.data.total_groups"/>
+                <div class="text-muted">Tontines</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm text-info">
+                <div class="fs-4 fw-bold" t-esc="state.data.draft_groups"/>
+                <div class="text-muted">Brouillon</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm text-success">
+                <div class="fs-4 fw-bold" t-esc="state.data.active_groups"/>
+                <div class="text-muted">Actives</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm text-secondary">
+                <div class="fs-4 fw-bold" t-esc="state.data.closed_groups"/>
+                <div class="text-muted">Clôturées</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm">
+                <div class="fs-4 fw-bold" t-esc="state.data.total_members"/>
+                <div class="text-muted">Membres</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card text-center p-3 shadow-sm text-danger">
+                <div class="fs-4 fw-bold" t-esc="state.data.late_payments"/>
+                <div class="text-muted">Retards</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <div class="text-muted">Total entrées</div>
+              <div class="fs-5 fw-bold text-success" t-esc="formatAmount(state.data.total_in)"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <div class="text-muted">Total sorties</div>
+              <div class="fs-5 fw-bold text-danger" t-esc="formatAmount(state.data.total_out)"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div t-attf-class="card p-3 shadow-sm border-3 {{ state.data.balance >= 0 ? 'border-success' : 'border-danger' }}" style="border-style: solid; background-color: #ffffff;">
+              <div class="fw-bold text-success">Solde global</div>
+              <div t-attf-class="fs-3 fw-bold {{ state.data.balance >= 0 ? 'text-success' : 'text-danger' }}">
+                <i t-attf-class="fa {{ state.data.balance >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"/>
+                <t t-esc="formatAmount(state.data.balance)"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="mb-3">Tontines</h4>
+        <div class="row g-3">
+          <t t-foreach="state.data.groups" t-as="group" t-key="group.id">
+            <div class="col-md-4">
+              <div class="card p-3 shadow-sm" t-on-click="() => this.openGroup(group.id)" style="cursor:pointer;">
+                <div class="fw-bold" t-esc="group.name"/>
+                <span t-attf-class="badge {{ group.state === 'active' ? 'bg-success' : group.state === 'draft' ? 'bg-info' : 'bg-secondary' }}" t-esc="group.state"/>
+                <div class="text-muted mt-2"><t t-esc="group.members"/> membres</div>
+                <div class="fw-bold" t-esc="formatAmount(group.balance)"/>
+              </div>
+            </div>
+          </t>
+        </div>
+      </t>
+
+      <t t-if="!state.loading and state.view === 'detail'">
+        <button class="btn btn-link mb-3" t-on-click="backToGlobal">← Retour</button>
+        <h2 t-esc="state.groupData.name"/>
+
+        <div class="row g-3 mb-4 mt-2">
+          <div class="col-md-3">
+            <div class="card text-center p-3 shadow-sm">
+              <div class="fs-4 fw-bold" t-esc="state.groupData.members_count"/>
+              <div class="text-muted">Membres</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-center p-3 shadow-sm text-success">
+              <div class="fs-4 fw-bold" t-esc="state.groupData.paid_count"/>
+              <div class="text-muted">Payés</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card text-center p-3 shadow-sm text-danger">
+              <div class="fs-4 fw-bold" t-esc="state.groupData.late_count"/>
+              <div class="text-muted">En retard</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div t-attf-class="card text-center p-3 shadow-sm border-3 {{ state.groupData.balance >= 0 ? 'border-success' : 'border-danger' }}" style="border-style: solid; background-color: #ffffff;">
+              <div t-attf-class="fs-3 fw-bold {{ state.groupData.balance >= 0 ? 'text-success' : 'text-danger' }}" t-esc="formatAmount(state.groupData.balance)"/>
+              <div class="fw-bold text-success">Solde caisse</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <div class="text-muted">Attendu</div>
+              <div class="fw-bold" t-esc="formatAmount(state.groupData.expected_total)"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <div class="text-muted">Encaissé</div>
+              <div class="fw-bold" t-esc="formatAmount(state.groupData.paid_total)"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <div class="text-muted">Pénalités</div>
+              <div class="fw-bold" t-esc="formatAmount(state.groupData.penalties_total)"/>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="mb-3">Distributions</h4>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="card text-center p-3 shadow-sm">
+              <div class="fs-4 fw-bold text-success" t-esc="state.groupData.distributions_done"/>
+              <div class="text-muted">Effectuées</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card text-center p-3 shadow-sm text-warning">
+              <div class="fs-4 fw-bold" t-esc="state.groupData.distributions_planned"/>
+              <div class="text-muted">Prévues</div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="mb-3">Membres Distribués</h4>
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Ordre</th><th>Membre</th><th>Statut distribution</th><th>Montant</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            <t t-foreach="state.groupData.members" t-as="m" t-key="m.id">
+              <tr>
+                <td t-esc="m.order"/>
+                <td t-esc="m.name"/>
+                <td>
+                  <span t-attf-class="badge {{ m.distribution_status === 'done' ? 'bg-success' : 'bg-secondary' }}">
+                    <t t-if="m.distribution_status === 'done'">Effectuée</t>
+                    <t t-if="m.distribution_status === 'not_done'">Non effectuée</t>
+                  </span>
+                </td>
+                <td t-esc="formatAmount(m.distribution_amount)"/>
+                <td t-esc="m.distribution_date"/>
+              </tr>
+            </t>
+          </tbody>
+        </table>
+      </t>
+    </div>
+  </t>
+</templates>

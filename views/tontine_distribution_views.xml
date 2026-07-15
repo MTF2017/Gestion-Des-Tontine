@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <odoo>
+
+    <!-- ============================= -->
+    <!-- DISTRIBUTIONS -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_distribution_list" model="ir.ui.view">
+        <field name="name">tontine.distribution.list</field>
+        <field name="model">tontine.distribution</field>
+        <field name="arch" type="xml">
+            <list string="Distributions">
+                <field name="group_id"/>
+                <field name="beneficiary_id"/>
+                <field name="order"/>
+                <field name="planned_date"/>
+                <field name="amount" sum="Total"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'planned'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tontine_distribution_form" model="ir.ui.view">
+        <field name="name">tontine.distribution.form</field>
+        <field name="model">tontine.distribution</field>
+        <field name="arch" type="xml">
+            <form string="Distribution">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="planned,done" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="group_id" domain="[('state', '=', 'active')]"/>
+                            <field name="available_beneficiary_ids" invisible="1"/>
+                            <field name="beneficiary_id" domain="[('id', 'in', available_beneficiary_ids)]" readonly="not group_id"/>
+                            <field name="order"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="planned_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tontine_distribution_search" model="ir.ui.view">
+        <field name="name">tontine.distribution.search</field>
+        <field name="model">tontine.distribution</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher distribution">
+                <field name="group_id"/>
+                <field name="beneficiary_id"/>
+                <filter string="Prévues" name="planned" domain="[('state','=','planned')]"/>
+                <filter string="Effectuées" name="done" domain="[('state','=','done')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="Tontine" name="group_by_group" context="{'group_by':'group_id'}"/>
+                    <filter string="Statut" name="group_by_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tontine_distribution" model="ir.actions.act_window">
+        <field name="name">Distributions</field>
+        <field name="res_model">tontine.distribution</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ============================= -->
+    <!-- VUE LISTE DES COTISATIONS -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_payment_list" model="ir.ui.view">
+
+        <field name="name">tontine.payment.list</field>
+        <field name="model">tontine.payment</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Cotisations">
+
+                <field name="subscription_id"/>
+                <field name="expected_amount"/>
+                <field name="amount"/>
+                <field name="penalty"/>
+                <field name="period_label"/>
+                <field name="date"/>
+                <field name="state"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <!-- ============================= -->
+    <!-- VUE FORMULAIRE DES COTISATIONS -->
+    <!-- ============================= -->
+
+    <record id="view_tontine_payment_form" model="ir.ui.view">
+
+        <field name="name">tontine.payment.form</field>
+        <field name="model">tontine.payment</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Cotisation">
+
+                <sheet>
+
+                    <group>
+                        <group string="Adhésion">
+                            <field name="group_id" domain="[('state', '=', 'active')]"/>
+                            <field name="available_member_ids" invisible="1"/>
+                            <field name="member_id" domain="[('id', 'in', available_member_ids)]" readonly="not group_id"/>
+                            <field name="subscription_id" readonly="1"/>
+                        </group>
+                        <group string="Paiement">
+                            <field name="date"/>
+                            <field name="expected_amount"/>
+                            <field name="amount"/>
+                            <field name="penalty"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+    <record id="view_tontine_payment_pivot" model="ir.ui.view">
+        <field name="name">tontine.payment.pivot</field>
+        <field name="model">tontine.payment</field>
+        <field name="arch" type="xml">
+            <pivot string="Suivi des cotisations">
+                <field name="member_id" type="row"/>
+                <field name="period_label" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================= -->
+    <!-- ACTION FENÊTRE -->
+    <!-- ============================= -->
+
+    <record id="action_tontine_payment" model="ir.actions.act_window">
+
+        <field name="name">Cotisations</field>
+        <field name="res_model">tontine.payment</field>
+        <field name="view_mode">list,form,pivot</field>
+
+    </record>
+
+</odoo>

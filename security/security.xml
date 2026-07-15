@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Groupe Administrateur Tontine -->
+    <record id="group_tontine_manager" model="res.groups">
+        <field name="name">Gestionnaire Tontine</field>
+        <field name="category_id" ref="base.module_category_services"/>
+    </record>
+
+
+    <!-- Groupe Caissier -->
+    <record id="group_tontine_cashier" model="res.groups">
+        <field name="name">Caissier Tontine</field>
+        <field name="category_id" ref="base.module_category_services"/>
+    </record>
+
+
+    <!-- Groupe Lecture membre -->
+    <record id="group_tontine_member" model="res.groups">
+        <field name="name">Membre Tontine</field>
+        <field name="category_id" ref="base.module_category_services"/>
+    </record>
+
+
+</odoo>
