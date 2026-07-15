@@ -149,7 +149,7 @@
           <div class="col-md-6">
             <div class="card text-center p-3 shadow-sm text-warning">
               <div class="fs-4 fw-bold" t-esc="state.groupData.distributions_planned"/>
-              <div class="text-muted">Prévues</div>
+              <div class="text-muted">Non effectuée</div>
             </div>
           </div>
         </div>
