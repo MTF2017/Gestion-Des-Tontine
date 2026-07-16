@@ -113,6 +113,7 @@ class TontineGroup(models.Model):
                 "id": g.id,
                 "name": g.name,
                 "state": g.state,
+                "frequency": g.frequency,
                 "members": len(g.member_ids),
                 "balance": g_in - g_out,
             })
@@ -166,6 +167,7 @@ class TontineGroup(models.Model):
         return {
             "name": self.name,
             "state": self.state,
+            "frequency": self.frequency,
             "members_count": len(subs),
             "expected_total": sum(payments.mapped("expected_amount")),
             "paid_total": sum(payments.mapped("amount")),

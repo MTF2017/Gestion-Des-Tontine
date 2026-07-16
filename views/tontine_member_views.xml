@@ -41,6 +41,7 @@
                     <group>
                         <group string="Informations personnelles">
                             <field name="phone"/>
+                            <field name="national_id"/>
                             <field name="join_date"/>
                             <field name="state"/>
                         </group>
@@ -99,6 +100,7 @@
         <field name="arch" type="xml">
             <list string="Membres" default_order="subscription_count desc">
                 <field name="name"/>
+                <field name="national_id"/>
                 <field name="subscription_count"/>
                 <field name="penalty_count"/>
                 <field name="state"/>

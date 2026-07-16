@@ -1,5 +1,5 @@
 {
-    'name': 'Gestion Tontine',
+    'name': 'SenTontine',
 
     'summary': 'Gestion des tontines, cotisations, distributions et caisse',
 

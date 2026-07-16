@@ -7,7 +7,7 @@
       </div>
 
       <t t-if="!state.loading and state.view === 'global'">
-        <h2 class="mb-4">Tableau de bord - Gestion Tontine</h2>
+        <h2 class="mb-4">Tableau de bord - SenTontine</h2>
         <div class="row g-3 mb-4">
             <div class="col-md-2">
                 <div class="card text-center p-3 shadow-sm">
@@ -76,8 +76,15 @@
           <t t-foreach="state.data.groups" t-as="group" t-key="group.id">
             <div class="col-md-4">
               <div class="card p-3 shadow-sm" t-on-click="() => this.openGroup(group.id)" style="cursor:pointer;">
-                <div class="fw-bold" t-esc="group.name"/>
-                <span t-attf-class="badge {{ group.state === 'active' ? 'bg-success' : group.state === 'draft' ? 'bg-info' : 'bg-secondary' }}" t-esc="group.state"/>
+                <div class="fw-bold fs-5" t-esc="group.name"/>
+                <div class="mt-1 d-flex" style="gap: 4px;">
+                  <span t-attf-class="badge {{ group.state === 'active' ? 'bg-success' : group.state === 'draft' ? 'bg-info' : 'bg-secondary' }} text-center" style="width: 75%;" t-esc="group.state"/>
+                  <span class="badge bg-light text-dark border text-center" style="width: 25%;">
+                    <t t-if="group.frequency === 'monthly'">Mensuelle</t>
+                    <t t-if="group.frequency === 'weekly'">Hebdomadaire</t>
+                    <t t-if="group.frequency === 'daily'">Quotidienne</t>
+                  </span>
+                </div>
                 <div class="text-muted mt-2"><t t-esc="group.members"/> membres</div>
                 <div class="fw-bold" t-esc="formatAmount(group.balance)"/>
               </div>
@@ -88,7 +95,14 @@
 
       <t t-if="!state.loading and state.view === 'detail'">
         <button class="btn btn-link mb-3" t-on-click="backToGlobal">← Retour</button>
-        <h2 t-esc="state.groupData.name"/>
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <h2 class="mb-0" t-esc="state.groupData.name"/>
+          <span class="badge bg-light text-dark border">
+            <t t-if="state.groupData.frequency === 'monthly'">Mensuelle</t>
+            <t t-if="state.groupData.frequency === 'weekly'">Hebdomadaire</t>
+            <t t-if="state.groupData.frequency === 'daily'">Quotidienne</t>
+          </span>
+        </div>
 
         <div class="row g-3 mb-4 mt-2">
           <div class="col-md-3">

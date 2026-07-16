@@ -128,7 +128,9 @@ class TontinePayment(models.Model):
                         "amount": payment.amount,
                         "description": f"Cotisation de {payment.member_id.name}",
                     })
+            payment._create_penalty_if_needed()
         return payments
+
     def write(self, vals):
         result = super().write(vals)
         if vals.get("state") == "paid":
@@ -145,7 +147,27 @@ class TontinePayment(models.Model):
                         "amount": payment.amount,
                         "description": f"Cotisation de {payment.member_id.name}",
                     })
+        if "penalty" in vals:
+            for payment in self:
+                payment._create_penalty_if_needed()
         return result
+
+    def _create_penalty_if_needed(self):
+        self.ensure_one()
+        if self.penalty > 0 and self.subscription_id:
+            existing = self.env["tontine.penalty"].search([
+                ("payment_id", "=", self.id)
+            ], limit=1)
+            if not existing:
+                self.env["tontine.penalty"].create({
+                    "subscription_id": self.subscription_id.id,
+                    "payment_id": self.id,
+                    "amount": self.penalty,
+                    "period": self.date,
+                    "reason": f"Retard de paiement - {self.period_label or ''}",
+                })
+            elif existing.amount != self.penalty:
+                existing.amount = self.penalty
     def unlink(self):
         cash_moves = self.env["tontine.cash"].search([("payment_id", "in", self.ids)])
         cash_moves.unlink()

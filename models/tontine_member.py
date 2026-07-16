@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class TontineMember(models.Model):
     _name = "tontine.member"
@@ -14,6 +15,11 @@ class TontineMember(models.Model):
         "res.partner",
         string="Contact",
         required=True
+    )
+    national_id = fields.Char(
+        string="Numéro CNI",
+        size=13,
+        help="Numéro de la Carte Nationale d'Identité (13 chiffres)"
     )
     phone = fields.Char(
         related="partner_id.phone"
@@ -44,6 +50,18 @@ class TontineMember(models.Model):
         compute="_compute_penalty_count",
         store=True
     )
+    _sql_constraints = [
+        ('national_id_unique', 'unique(national_id)', 'Ce numéro CNI est déjà enregistré pour un autre membre.')
+    ]
+
+    @api.constrains("national_id")
+    def _check_national_id_format(self):
+        for member in self:
+            if member.national_id:
+                if not member.national_id.isdigit():
+                    raise ValidationError("Le numéro CNI ne doit contenir que des chiffres.")
+                if len(member.national_id) != 13:
+                    raise ValidationError("Le numéro CNI doit contenir exactement 13 chiffres.")
 
     @api.depends("subscription_ids")
     def _compute_subscription_count(self):
